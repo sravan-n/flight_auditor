@@ -9,9 +9,6 @@ The preconditions for many of these functions are quite messy.  While this makes
 the functions simpler (because the preconditions ensure we have less to worry about), 
 enforcing these preconditions can be quite hard. That is why it is not necessary to 
 enforce any of the preconditions in this module.
-
-Author: YOUR NAME HERE
-Date: THE DATE HERE
 """
 import csv
 import json

@@ -4,9 +4,6 @@ The central unit test module.
 This file supports a single function for running all the unit tests.  It is the 
 primary test hook for __main__.py.  But __init__.py also exposes it in case you
 do really want to run all tests and not just one test.
-
-Author: Walker M. White (wmw2)
-Date:   June 7, 2019
 """
 # See: https://stackoverflow.com/questions/14132789/relative-imports-for-the-billionth-time
 if __package__ is None or __package__ == '':

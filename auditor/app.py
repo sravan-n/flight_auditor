@@ -7,9 +7,6 @@ the lessons, and searches for any takeoffs that violate insurance requirements.
 Technically, we could have put many of these functions in __main__.py.  That is the
 main module of this application anyway.  However, for testing purposes we want all
 functions in modules and we only want script code in the file __main__.py
-
-Author: YOUR NAME HERE
-Date: THE DATE HERE
 """
 import utils
 import tests

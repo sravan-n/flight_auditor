@@ -2,9 +2,6 @@
 Test procedures for the pilot functions for this project.
 
 These tests read from the pilot file in the same directory as this one.
-
-Author: Walker M. White (wmw2)
-Date:   June 7, 2019
 """
 # See: https://stackoverflow.com/questions/14132789/relative-imports-for-the-billionth-time
 if __package__ is None or __package__ == '':

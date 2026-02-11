@@ -5,9 +5,6 @@ This module is a variation on the unit testing tools provided by introcs. It has
 extra functionality to improve the error messages that we provide students. It also 
 has helper functions to access the modules to test, even though they are in another
 folder.
-
-Author:  Walker M. White (wmw2)
-Date: June 7, 2019
 """
 import os.path
 import math

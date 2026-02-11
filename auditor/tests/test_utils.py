@@ -2,9 +2,6 @@
 Test procedures for the utility functions for this project.
 
 These tests read and write from files in the same directory as this file.
-
-Author: Walker M. White (wmw2)
-Date:   June 7, 2019
 """
 
 import os.path
