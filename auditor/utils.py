@@ -192,7 +192,7 @@ def daytime(time,daycycle):
     if time.tzinfo == None:
         tz = pytz.timezone(timezone)
         time = tz.localize(time)
-    
+
     if sunrise < time and time < sunset:
         return True
     else:
@@ -216,4 +216,7 @@ def get_for_id(id,table):
     Parameter table: The 2-dimensional table of data
     Precondition: table is a non-empty 2-dimension list of strings
     """
-    pass                    # Implement this function
+
+    for row in table:
+        if row[0] == id:
+            return row
