@@ -28,7 +28,18 @@ def read_csv(filename):
     Precondition: filename is a string, referring to a file that exists, and that file 
     is a valid CSV file
     """
-    pass                    # Implement this function
+    
+    file = open(filename)
+    csv_reader = csv.reader(file)
+    
+    data = []
+    
+    for row in csv_reader:
+        data.append(row)
+    
+    file.close()
+    
+    return data
 
 
 def write_csv(data,filename):
@@ -47,7 +58,14 @@ def write_csv(data,filename):
     Precondition: filename is a string representing a path to a file with extension
     .csv or .CSV.  The file may or may not exist.
     """
-    pass                    # Implement this function
+    
+    file = open(filename,'w')
+    csv_writer = csv.writer(file)
+    
+    for row in data:
+        csv_writer.writerow(row)
+    
+    file.close()
 
 
 def read_json(filename):
