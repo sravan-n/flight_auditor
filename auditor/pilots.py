@@ -76,6 +76,37 @@ def get_certification(takeoff,student):
     Precondition: student is 10-element list of strings representing a pilot
     """
 
+    tz = str(takeoff.tzinfo)
+
+    joined = utils.str_to_time(student[3], tz)
+    solo = utils.str_to_time(student[4], tz)
+    license = utils.str_to_time(student[5], tz)
+    hours50 = utils.str_to_time(student[6], tz)
+
+    # JOINED is when the student first started training
+    # SOLO is when the student is allowed to fly without an instructor
+    # LICENSE is when the student has earned a pilot’s license
+    # 50 HOURS is when the student has earned relaxed restrictions
+    # INSTRUMENT is when the student can fly in poor visibility
+    # ADVANCED is when the student is allowed to fly more powerful aircraft
+    # MULTIENGINE is when the student is allowed to fly multiengine aircraft
+
+    # PILOT_INVALID -1 (A pilot that is not even in the school)
+    # PILOT_NOVICE 0 (A pilot that has joined the school but has not soloed)
+    # PILOT_STUDENT 1 (A pilot that has soloed but does not have a license)
+    # PILOT_CERTIFIED 2 (A pilot that has a license but has under 50 hours)
+    # PILOT_50_HOURS 3 (A pilot with 50 hours post license)
+
+    if joined is None or takeoff < joined:
+        return -1
+    elif solo is None or takeoff < solo:
+        return 0
+    elif license is None or takeoff < license:
+        return 1
+    elif hours50 is None or takeoff < hours50:
+        return 2
+    else:
+        return 3
 
 
 def has_instrument_rating(takeoff,student):
