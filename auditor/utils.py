@@ -80,7 +80,12 @@ def read_json(filename):
     Precondition: filename is a string, referring to a file that exists, and that file 
     is a valid JSON file
     """
-    pass                    # Implement this function
+    
+    file = open(filename)
+    content = file.read()
+    data = json.loads(content)
+    file.close()
+    return data
 
 
 def str_to_time(timestamp,tzsource=None):
