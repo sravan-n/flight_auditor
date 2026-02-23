@@ -497,11 +497,59 @@ def list_weather_violations(directory):
     'weather.json', 'minimums.csv', 'students.csv', and 'lessons.csv'
     """
     # Load in all of the files
+    daycycle = utils.read_json(os.path.join(directory, DAYCYCLE))
+    weather_data = utils.read_json(os.path.join(directory, WEATHER))
+    minimums_table = utils.read_csv(os.path.join(directory, MINIMUMS))
+    students_table = utils.read_csv(os.path.join(directory, STUDENTS))
+    lessons_table = utils.read_csv(os.path.join(directory, LESSONS))
     
-    # For each of the lessons
+    violations = []
+    
+    # For each of the lessons (skip header row)
+    for lesson in lessons_table[1:]:
         # Get the takeoff time
+        student_id = lesson[0]
+        takeoff_str = lesson[3]
+        filed = lesson[5]  # VFR or IFR
+        area = lesson[6]
+        
+        # Parse takeoff time and convert to named timezone
+        takeoff = utils.str_to_time(takeoff_str)
+        # Replace the timezone with a named timezone from daycycle
+        if takeoff is not None and takeoff.tzinfo is not None:
+            import pytz
+            tz = pytz.timezone(daycycle['timezone'])
+            takeoff = takeoff.astimezone(tz)
+        
         # Get the pilot credentials
+        student = utils.get_for_id(student_id, students_table)
+        
+        # Determine if instructor is present (check if instructor field is not empty)
+        instructor_id = lesson[2]
+        instructed = instructor_id != ''
+        
+        # Determine if it's VFR or IFR
+        vfr = filed == 'VFR'
+        
+        # Determine if it's daytime
+        daytime = utils.daytime(takeoff, daycycle)
+        
+        # Get the pilot certification
+        cert = pilots.get_certification(takeoff, student)
+        
         # Get the pilot minimums
+        pilot_minimums = pilots.get_minimums(cert, area, instructed, vfr, daytime, minimums_table)
+        
         # Get the weather conditions
+        weather_report = get_weather_report(takeoff, weather_data)
+        
         # Check for a violation and add to result if so
-    pass
+        if pilot_minimums is not None:
+            violation = get_weather_violation(weather_report, pilot_minimums)
+            
+            if violation != '':
+                # Add the lesson with violation appended
+                violating_lesson = lesson + [violation]
+                violations.append(violating_lesson)
+    
+    return violations
