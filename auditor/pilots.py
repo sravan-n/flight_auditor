@@ -204,7 +204,22 @@ def get_best_value(data, index, maximum=True):
 
     """
     # Find the best values for each column of the row
-    pass
+    if not data:
+        return None
+
+    best = float(data[0][index])
+
+    for row in data[1:]:
+        value = float(row[index])
+        if maximum:
+            if value > best:
+                best = value
+        else:
+            if value < best:
+                best = value
+
+    return best
+
 
 
 def get_minimums(cert, area, instructed, vfr, daytime, minimums):
@@ -291,6 +306,62 @@ def get_minimums(cert, area, instructed, vfr, daytime, minimums):
     Precondition: minimums is a 2d-list (table) as described above, including header
     """
     # Find all rows that can apply to this student
+    matches = []
+    
+    # Skip header row
+    for row in minimums[1:]:
+        category = row[0]
+        conditions = row[1]
+        row_area = row[2]
+        time = row[3]
+        
+        # Check CATEGORY match
+        category_match = False
+        if category == 'Dual':
+            category_match = instructed
+        elif category == 'Student':
+            category_match = cert >= PILOT_STUDENT
+        elif category == 'Certified':
+            category_match = cert >= PILOT_CERTIFIED
+        elif category == '50 Hours':
+            category_match = cert == PILOT_50_HOURS
+        
+        # Check CONDITIONS match (VFR -> VMC, IFR -> IMC)
+        conditions_match = False
+        if vfr:
+            conditions_match = conditions == 'VMC'
+        else:
+            conditions_match = conditions == 'IMC'
+        
+        # Check AREA match
+        area_match = False
+        if row_area == 'Any':
+            area_match = True
+        elif row_area == 'Local':
+            area_match = area in ['Pattern', 'Practice Area', 'Local']
+        else:
+            area_match = row_area == area
+        
+        # Check TIME match
+        time_match = False
+        if daytime:
+            time_match = time == 'Day'
+        else:
+            time_match = time == 'Night'
+        
+        # All criteria must match
+        if category_match and conditions_match and area_match and time_match:
+            matches.append(row)
+    
+    # If no matches, return None
+    if not matches:
+        return None
+    
     # Find the best values for each column of the row
     # HINT: remember to use get_best_value to find best value in list of matches
-    pass
+    ceiling = get_best_value(matches, 4, maximum=False)      # Lower is better
+    visibility = get_best_value(matches, 5, maximum=False)   # Lower is better
+    wind = get_best_value(matches, 6, maximum=True)          # Higher is better
+    crosswind = get_best_value(matches, 7, maximum=True)     # Higher is better
+    
+    return [ceiling, visibility, wind, crosswind]
