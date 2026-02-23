@@ -317,8 +317,34 @@ def get_weather_report(takeoff,weather):
     # Only loop through the dictionary as a back-up if that fails.
     
     # Search for time in dictionary
+    # Convert takeoff to ISO format string
+    takeoff_str = takeoff.isoformat()
+    
+    # Check if exact match exists
+    if takeoff_str in weather:
+        return weather[takeoff_str]
+    
     # As fall back, find the closest time before takeoff
-    pass
+    closest_time = None
+    closest_key = None
+    
+    for timestamp_str in weather:
+        # Convert timestamp string to datetime for comparison
+        timestamp = utils.str_to_time(timestamp_str)
+        
+        # Only process if conversion succeeded
+        if timestamp is not None:
+            # Only consider times strictly before takeoff (not equal)
+            if timestamp < takeoff:
+                # Check if this is the closest time so far
+                if closest_time is None or timestamp > closest_time:
+                    closest_time = timestamp
+                    closest_key = timestamp_str
+    
+    # Return the report for the closest time, or None if no match found
+    if closest_key is not None:
+        return weather[closest_key]
+    return None
 
 
 def get_weather_violation(weather,minimums):
