@@ -98,13 +98,23 @@ def execute(args):
     Parameter args: The command line arguments for the application (minus the application name)
     Precondition: args is a list of strings
     """
-    # Check if the user wants to run tests
-    if len(args) == 1 and args[0] == '--test':
-        tests.test_all()
+    # Check for correct number of arguments first
+    if len(args) < 1 or len(args) > 2:
+        print('Usage: python auditor dataset [output.csv]')
         return
     
-    # Check for correct number of arguments
-    if len(args) < 1 or len(args) > 2:
+    # Check if the user wants to run tests (must be the only argument)
+    if args[0] == '--test':
+        if len(args) == 1:
+            tests.test_all()
+            return
+        else:
+            # --test cannot be used with other arguments
+            print('Usage: python auditor dataset [output.csv]')
+            return
+    
+    # Check if second argument is --test (invalid usage)
+    if len(args) == 2 and args[1] == '--test':
         print('Usage: python auditor dataset [output.csv]')
         return
     
