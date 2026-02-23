@@ -51,7 +51,31 @@ def discover_violations(directory,output):
     Parameter output: The CSV file to store the results
     Precondition: output is None or a string that is a valid file name
     """
-    pass                    # Implement this function
+    # Get weather violations
+    all_violations = violations.list_weather_violations(directory)
+    
+    # Uncomment for extra credit - add endorsement violations
+    # all_violations.extend(endorsements.list_endorsement_violations(directory))
+    
+    # Uncomment for extra credit - add inspection violations
+    # all_violations.extend(inspections.list_inspection_violations(directory))
+    
+    # Write to CSV file if output is specified
+    if output is not None:
+        # Create header
+        header = ['STUDENT', 'AIRPLANE', 'INSTRUCTOR', 'TAKEOFF', 'LANDING', 'FILED', 'AREA', 'REASON']
+        # Combine header with violations
+        output_data = [header] + all_violations
+        utils.write_csv(output_data, output)
+    
+    # Print the number of violations
+    num_violations = len(all_violations)
+    if num_violations == 0:
+        print('No violations found.')
+    elif num_violations == 1:
+        print('1 violation found.')
+    else:
+        print(str(num_violations) + ' violations found.')
 
 
 def execute(args):
@@ -74,5 +98,20 @@ def execute(args):
     Parameter args: The command line arguments for the application (minus the application name)
     Precondition: args is a list of strings
     """
-    pass                    # Implement this function
+    # Check if the user wants to run tests
+    if len(args) == 1 and args[0] == '--test':
+        tests.test_all()
+        return
+    
+    # Check for correct number of arguments
+    if len(args) < 1 or len(args) > 2:
+        print('Usage: python auditor dataset [output.csv]')
+        return
+    
+    # Get directory and optional output file
+    directory = args[0]
+    output = args[1] if len(args) == 2 else None
+    
+    # Discover violations
+    discover_violations(directory, output)
 
