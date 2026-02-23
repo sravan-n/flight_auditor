@@ -46,55 +46,55 @@ def teaches_multiengine(instructor):
     """
     Returns True if this instructor can teach a student on a multiengine flight.
     False otherwise.
-    
+
     Parameter instructor: The flight instructor
     Precondition: instructor is a 6-element list of strings representing an instructor
     """
-    pass                    # Implement this function
+    return instructor[5] == 'Yes'
 
 
 def teaches_instrument(instructor):
     """
     Returns True if this instructor can teach a student on an IFR flight.
     False otherwise.
-    
+
     Parameter instructor: The flight instructor
     Precondition: instructor is a 6-element list of strings representing an instructor
     """
-    pass                    # Implement this function
+    return instructor[4] == 'Yes'
 
 
 def is_advanced(plane):
     """
     Returns True if the plane requires an advanced endorsement; False otherwise.
-    
+
     Parameter plane: The school airplane
     Precondition: plane is a 7-element list of strings representing an airplane
     """
-    pass                    # Implement this function
+    return plane[3] == 'Yes'
 
 
 def is_multiengine(plane):
     """
     Returns True if the plane requires a multiengine endorsement; False otherwise.
-    
+
     Parameter plane: The school airplane
     Precondition: plane is a 7-element list of strings representing an airplane
     """
-    pass                    # Implement this function
+    return plane[4] == 'Yes'
 
 
 def is_ifr_capable(plane):
     """
     Returns True if the plane is outfitted for IFR flight; False otherwise.
-    
+
     NOTE: Just because a plane is IFR capable, does not mean that every flight
     with it is an IFR flight.
-    
+
     Parameter plane: The school airplane
     Precondition: plane is a 7-element list of strings representing an airplane
     """
-    pass                    # Implement this function
+    return plane[2] == 'IFR'
 
 
 def bad_endorsement(takeoff,student,instructor,plane):
