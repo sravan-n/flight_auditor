@@ -405,7 +405,44 @@ def get_weather_violation(weather,minimums):
     Parameter minimums: The safety minimums for ceiling, visibility, wind, and crosswind
     Precondition: minimums is a list of four floats
     """
-    pass                    # Implement this function
+    # If no weather reading is available, return 'Unknown'
+    if weather is None:
+        return 'Unknown'
+    
+    # Extract minimums: [ceiling, visibility, wind, crosswind]
+    min_ceiling = minimums[0]
+    min_visibility = minimums[1]
+    max_wind = minimums[2]
+    max_crosswind = minimums[3]
+    
+    # Check each weather condition
+    visibility_bad = bad_visibility(weather['visibility'], min_visibility)
+    winds_bad = bad_winds(weather['wind'], max_wind, max_crosswind)
+    ceiling_bad = bad_ceiling(weather['sky'], min_ceiling)
+    
+    # Count how many violations there are
+    violation_count = 0
+    violation_type = ''
+    
+    if visibility_bad:
+        violation_count = violation_count + 1
+        violation_type = 'Visibility'
+    
+    if winds_bad:
+        violation_count = violation_count + 1
+        violation_type = 'Winds'
+    
+    if ceiling_bad:
+        violation_count = violation_count + 1
+        violation_type = 'Ceiling'
+    
+    # Return appropriate string based on number of violations
+    if violation_count == 0:
+        return ''
+    elif violation_count == 1:
+        return violation_type
+    else:
+        return 'Weather'
 
 
 # FILES TO AUDIT
