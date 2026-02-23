@@ -68,7 +68,23 @@ def bad_visibility(visibility,minimum):
     Parameter minimum: The minimum allowed visibility (in statute miles)
     Precondition: minimum is a float or int
     """
-    pass                    # Implement this function
+    # If visibility is unavailable, return True
+    if visibility == 'unavailable':
+        return True
+    
+    # Get the visibility measurement to compare
+    # Use 'minimum' if it exists, otherwise use 'prevailing'
+    if 'minimum' in visibility:
+        measurement = visibility['minimum']
+    else:
+        measurement = visibility['prevailing']
+    
+    # Convert to statute miles if needed
+    if visibility['units'] == 'FT':
+        measurement = measurement / 5280.0  # Convert feet to miles
+    
+    # Return True if the minimum required is more than the measurement
+    return minimum > measurement
 
 
 def bad_winds(winds,maxwind,maxcross):
