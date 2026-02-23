@@ -100,28 +100,42 @@ def is_ifr_capable(plane):
 def bad_endorsement(takeoff,student,instructor,plane):
     """
     Returns True if the student or instructor did not have the right endorsement.
-    
+
     The endorsement depends on the plane type (advanced, multiengine).  All
     instructors are certified for advanced planes, so a flight with an instructor
     is only a problem if the plane is multiengine and the instructor does not
     have an MEI.
-    
+
     If there is no instructor, the student must be endorsed for this type of
     plane before the time of takeoff.
-    
+
     Parameter takeoff: The takeoff time of this flight
     Precondition: takeoff is a datetime object
-    
+
     Parameter student: The student pilot
     Precondition: student is 10-element list of strings representing a pilot
-    
+
     Parameter instructor: The flight instructor
     Precondition: instructor is a 6-element list of strings representing an instructor
-    
+
     Parameter plane: The school airplane
     Precondition: plane is a 7-element list of strings representing an airplane
     """
-    pass                    # Implement this function
+    # Check if there's an instructor (instructor ID is not empty)
+    has_instructor = instructor[0] != ''
+
+    if has_instructor:
+        # With instructor: only problem is multiengine plane without MEI
+        if is_multiengine(plane) and not teaches_multiengine(instructor):
+            return True
+    else:
+        # Without instructor: student must have proper endorsements
+        if is_advanced(plane) and not pilots.has_advanced_endorsement(takeoff, student):
+            return True
+        if is_multiengine(plane) and not pilots.has_multiengine_endorsement(takeoff, student):
+            return True
+
+    return False
 
 
 def bad_ifr(takeoff,student,instructor,plane):
