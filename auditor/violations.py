@@ -129,7 +129,41 @@ def bad_winds(winds,maxwind,maxcross):
     Parameter maxcross: The maximum allowable crosswind speed (in knots)
     Precondition: maxcross is a float or int
     """
-    pass                    # Implement this function
+    # If winds are calm, always return False (no violation)
+    if winds == 'calm':
+        return False
+    
+    # If winds are unavailable, return True (bad record keeping)
+    if winds == 'unavailable':
+        return True
+    
+    # Get wind speed (use gusts if available and worse than speed)
+    wind_speed = winds['speed']
+    if 'gusts' in winds:
+        wind_speed = max(wind_speed, winds['gusts'])
+    
+    # Convert to knots if needed
+    if winds['units'] == 'MPS':
+        wind_speed = wind_speed * 1.94384  # Convert MPS to knots
+    
+    # Check if wind speed violates maximum
+    if wind_speed > maxwind:
+        return True
+    
+    # Check crosswind if it exists
+    if 'crosswind' in winds:
+        crosswind_speed = winds['crosswind']
+        
+        # Convert to knots if needed
+        if winds['units'] == 'MPS':
+            crosswind_speed = crosswind_speed * 1.94384
+        
+        # Check if crosswind violates maximum
+        if crosswind_speed > maxcross:
+            return True
+    
+    # No violations
+    return False
 
 
 def bad_ceiling(ceiling,minimum):
