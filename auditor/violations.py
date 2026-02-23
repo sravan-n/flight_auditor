@@ -208,7 +208,34 @@ def bad_ceiling(ceiling,minimum):
     Parameter minimum: The minimum allowed ceiling (in feet)
     Precondition: minimum is a float or int
     """
-    pass                    # Implement this function
+    # If ceiling is clear, always return False (no violation)
+    if ceiling == 'clear':
+        return False
+    
+    # If ceiling is unavailable, return True (bad record keeping)
+    if ceiling == 'unavailable':
+        return True
+    
+    # Find the lowest cloud layer that is broken, overcast, or indefinite ceiling
+    lowest_ceiling = None
+    
+    for layer in ceiling:
+        layer_type = layer['type']
+        
+        # Only consider broken, overcast, or indefinite ceiling
+        if layer_type in ['broken', 'overcast', 'indefinite ceiling']:
+            height = layer['height']
+            
+            # Track the lowest ceiling
+            if lowest_ceiling is None or height < lowest_ceiling:
+                lowest_ceiling = height
+    
+    # If no relevant cloud layers found, return False (no violation)
+    if lowest_ceiling is None:
+        return False
+    
+    # Return True if minimum required is more than the actual ceiling
+    return minimum > lowest_ceiling
 
 
 def get_weather_report(takeoff,weather):
